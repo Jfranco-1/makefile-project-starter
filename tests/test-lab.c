@@ -196,14 +196,21 @@ void test_remove_from_empty_list(void) {
     TEST_ASSERT_TRUE(lst_->size == 0);
 }
 
-/*Checks that list_indexof returns the index of the first occurrence of a duplicate element. */
+/*Checks that list_indexof returns the index of the first occurrence of a duplicate element.
+ Fixed and updated test to address memory leak
+ */
 void test_indexOf_with_duplicates(void) {
     list_add(lst_, alloc_data(5));
     list_add(lst_, alloc_data(10));
     list_add(lst_, alloc_data(5));
-    int idx = list_indexof(lst_, alloc_data(5));
+    
+    int *dup_data = alloc_data(5);  // Allocate temporary data for searching
+    int idx = list_indexof(lst_, dup_data);
+    free(dup_data);  // Free the temporary memory after using it
+
     TEST_ASSERT_TRUE(idx == 0);
 }
+
 
 /* Checks on the empty list destruction to avoid memory leaks */
 void test_destroy_empty_list(void) {
